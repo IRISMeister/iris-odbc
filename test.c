@@ -42,8 +42,11 @@ int main(int argc, char** argv)
 	rc=SQLBindParameter (hstmt1, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, sizeof(name), 0, name, 0, NULL);
 	check("bindpara",rc);
 
-	char value[]="日本語の文字列";
-	printf("strlen value: %ld\n",strlen(value));
+	char value[]="日本語";
+	//char value[] = {0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E,'\0'};  //utf8
+	//char value[] = {0xC6, 0xFC, 0xCB, 0xDC, 0xB8, 0xEC, '\0'}; //euc-jp
+	//char value[] = {0x93, 0xFA, 0x96, 0x7B, 0x8C, 0xEA, '\0'}; //SJIS
+	printf("value %s. strlen of value: %ld\n",value,strlen(value));
 
 	//sprintf(value,"%d",100);
 	strncpy(name, value, strlen(value));
