@@ -1,0 +1,15 @@
+sudo apt install odbcinst unixodbc unixodbc-dev
+
+sudo odbcinst -i -d -l -f ./odbcinst.ini 
+
+sudo odbcinst -i -s -l -f ./odbc.ini
+
+odbcinst -query -s
+
+isql -v irisdatasource
+
+gcc test.c -lodbc
+./a.out
+
+IRIS/SQL
+create table TEST (p VARCHAR(100))
