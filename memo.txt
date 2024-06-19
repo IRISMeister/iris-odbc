@@ -44,6 +44,23 @@ comment out .bashrc
 
 端末エミュレータのin/out をeuc-jpに設定。
 
+locale
+LANG=ja_JP.eucJP
+LANGUAGE=ja_JP:ja
+LC_CTYPE="ja_JP.eucJP"
+LC_NUMERIC="ja_JP.eucJP"
+LC_TIME="ja_JP.eucJP"
+LC_COLLATE="ja_JP.eucJP"
+LC_MONETARY="ja_JP.eucJP"
+LC_MESSAGES="ja_JP.eucJP"
+LC_PAPER="ja_JP.eucJP"
+LC_NAME="ja_JP.eucJP"
+LC_ADDRESS="ja_JP.eucJP"
+LC_TELEPHONE="ja_JP.eucJP"
+LC_MEASUREMENT="ja_JP.eucJP"
+LC_IDENTIFICATION="ja_JP.eucJP"
+LC_ALL=
+
 gcc -finput-charset=utf-8 -fexec-charset=EUC-JP test.c -lodbc
 
 ./a.out
