@@ -1,3 +1,5 @@
+sudo apt install locales language-pack-ja
+
 sudo apt install odbcinst unixodbc unixodbc-dev
 
 sudo odbcinst -i -d -l -f ./odbcinst.ini 
@@ -13,3 +15,57 @@ gcc test.c -lodbc
 
 IRIS/SQL
 create table TEST (p VARCHAR(100))
+
+----
+EUC環境への変更
+
+To Enable euc-jp
+
+vi /etc/locale.gen
+sudo locale-gen
+$ locale -a
+C
+C.utf8
+POSIX
+en_US.utf8
+ja_JP
+ja_JP.eucjp
+ja_JP.ujis
+ja_JP.utf8
+japanese
+japanese.euc
+
+sudo vi /etc/default/locale
+ LANG=ja_JP.eucJP
+sudo vi /etc/environment
+ LANG=ja_JP.eucJP
+comment out .bashrc 
+ #export LANG=ja_JP.UTF-8
+
+端末エミュレータのin/out をeuc-jpに設定。
+
+gcc -finput-charset=utf-8 -fexec-charset=EUC-JP test.c -lodbc
+
+./a.out
+value 日本語. strlen of value: 6
+SQLRowCount:1
+name is 日本語. Length is 6. ID is 1.
+
+
+中身もUTF16(正しい)。
+USER>Zw ^poCN.ENGd.1
+^poCN.ENGd.1=1
+^poCN.ENGd.1(1)=$lb("罐罨茯") <==化けるのは「その他のターミナル」のエンコードがUTF8だから
+
+USER>zzdump ^poCN.ENGd.1(1)
+0000: 08 02 E5 65 2C 67 9E 8A                                 ..奪e,g..
+
+USER>zzdump $LISTBUILD("日本語")
+0000: 08 02 E5 65 2C 67 9E 8A                                 ..åe,g..
+
+入力/出力テーブルの「その他のターミナル」をUTF8からEUCに変えたいが、そのようなIRISロケールは無くなった模様。自作して使用。
+select * from test
+
+| p |
+| -- |
+| 日本語 |
