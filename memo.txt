@@ -1,3 +1,5 @@
+
+
 sudo apt install locales language-pack-ja
 
 sudo apt install odbcinst unixodbc unixodbc-dev
@@ -10,14 +12,29 @@ odbcinst -query -s
 
 isql -v irisdatasource
 
-gcc test.c -lodbc
-./a.out
-
 IRIS/SQL
 create table TEST (p VARCHAR(100))
 
-----
-EUC環境への変更
+------------
+デフォルト (utf8)の場合
+
+gcc test.c -lodbc
+./a.out
+
+IRISODBCTRACE=1 ./a.out
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        Started At: Wed Jun 19 15:03:36 2024
+
+        Driver Name:    libirisodbcur6435.so
+        Unicode Client Version: 2024.1.0.262.0
+        Compiled at:    Mar  7 2024 15:34:44
+        ODBC Version:   03.51
+        Locale Setting: /etc/localtime
+        ODBC Config file:       /etc/odbc.ini
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+------------
+EUCベースへの変更
 
 To Enable euc-jp
 

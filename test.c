@@ -7,6 +7,8 @@
 #include <sql.h>
 #include <sqlext.h>
 
+//#include <locale.h> // setlocale()
+
 void check(char *loc,RETCODE rc);
 void check2(char *loc,RETCODE rc);
 
@@ -26,6 +28,15 @@ int main(int argc, char** argv)
 	long id;
 	SQLLEN id_len;
 
+	/*
+	// 効果見られず
+	char *old_locale = setlocale (LC_ALL, NULL);
+	printf("old_locale: %s\n",old_locale);
+
+	char *new_locale = setlocale (LC_ALL, "ja_JP.eucJP");
+	printf("new_locale: %s\n",new_locale);
+	*/
+
  	// SQLHANDLE 変数を用意して初期化する
 	SQLAllocHandle (SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);
 	SQLSetEnvAttr (henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
@@ -43,9 +54,12 @@ int main(int argc, char** argv)
 	check("bindpara",rc);
 
 	char value[]="日本語";
+	/*
+	// 文字コードの切り替えは-fexec-charsetで可能
 	//char value[] = {0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E,'\0'};  //utf8
 	//char value[] = {0xC6, 0xFC, 0xCB, 0xDC, 0xB8, 0xEC, '\0'}; //euc-jp
 	//char value[] = {0x93, 0xFA, 0x96, 0x7B, 0x8C, 0xEA, '\0'}; //SJIS
+	*/
 	printf("value %s. strlen of value: %ld\n",value,strlen(value));
 
 	//sprintf(value,"%d",100);
