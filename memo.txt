@@ -11,9 +11,7 @@ sudo odbcinst -i -s -l -f ./odbc.ini
 odbcinst -query -s
 
 isql -v irisdatasource
-
-IRIS/SQL
-create table TEST (p VARCHAR(100))
+SQL>create table TEST (p VARCHAR(100))
 
 ------------
 デフォルト (utf8)の場合
@@ -21,7 +19,7 @@ create table TEST (p VARCHAR(100))
 gcc test.c -lodbc
 ./a.out
 
-IRISODBCTRACE=1 ./a.out
+IRISODBCTRACE=1 ./a.out  (logging)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         Started At: Wed Jun 19 15:03:36 2024
 
