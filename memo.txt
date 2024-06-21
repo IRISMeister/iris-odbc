@@ -57,7 +57,7 @@ sudo vi /etc/environment
 comment out .bashrc 
  #export LANG=ja_JP.UTF-8
 
-端末エミュレータのin/out をeuc-jpに設定。
+端末エミュレータ(teraterm)のin/out をeuc-jpに設定。
 
 locale
 LANG=ja_JP.eucJP
@@ -87,7 +87,7 @@ name is 日本語. Length is 6. ID is 1.
 中身もUTF16(正しい)。
 USER>Zw ^poCN.ENGd.1
 ^poCN.ENGd.1=1
-^poCN.ENGd.1(1)=$lb("罐罨茯") <==化けるのは「その他のターミナル」のエンコードがUTF8だから
+^poCN.ENGd.1(1)=$lb("罐罨茯") <==化けるのはIRISロケールの「その他のターミナル」のエンコードがUTF8だから
 
 USER>zzdump ^poCN.ENGd.1(1)
 0000: 08 02 E5 65 2C 67 9E 8A                                 ..奪e,g..
@@ -95,9 +95,57 @@ USER>zzdump ^poCN.ENGd.1(1)
 USER>zzdump $LISTBUILD("日本語")
 0000: 08 02 E5 65 2C 67 9E 8A                                 ..åe,g..
 
-入力/出力テーブルの「その他のターミナル」をUTF8からEUCに変えたいが、そのようなIRISロケールは無くなった模様。自作して使用。
+入力/出力テーブルの「その他のターミナル」をUTF8からEUCに変えたいが、そのようなIRISロケールは無い模様。自作して使用。
 select * from test
 
 | p |
 | -- |
 | 日本語 |
+
+------------
+
+8bit版IRISでタイ語(tis620)を試す
+https://docs.intersystems.com/iris20241/csp/docbook/DocBook.UI.Page.cls?KEY=ISP_languages#ISP_nls
+Thai	CP874 (Thai), Latin-T, Unicode
+
+$ locale -a
+th_TH
+th_TH.tis620
+thai
+
+https://ja.wikipedia.org/wiki/TIS-620
+tis620はISO 8859-11とほぼ同じらしい。
+
+iconv -f tis620 Thai-ISO-8859-11.txt
+
+IRISのロケールをtha8に設定。
+
+DSN名を"irisds8bit"に。
+
+char value[]="กขฃคฅ";
+
+gcc -finput-charset=utf-8 -fexec-charset=tis620 test.c -lodbc
+
+IRISODBCTRACE=1 LANG=th_TH.tis620 ./a.out 
+value �����. strlen of value: 5 <== Thai(tis620)対応のターミナルで見れば化けないはず。
+SQLRowCount:1
+name is �����. Length is 5. ID is 1.
+
+isql -v irisds8bit
+SQL> select * from test
++-----------------------------------------------------------------------------------------------------+
+| p                                                                                                   |
++-----------------------------------------------------------------------------------------------------+
+| กขฃคฅ                                                                                     |
++-----------------------------------------------------------------------------------------------------+
+SQLRowCount returns 1
+1 rows fetched
+SQL>
+
+USER>zw ^poCN.ENGd.1
+^poCN.ENGd.1=1
+^poCN.ENGd.1(1)=$lb("�����")   <== 化けるのはIRISロケール(tha8)でOther terminalがRAWになっているから。Thai(tis620)対応のターミナルで見れば化けないはず。
+                                あるいは「Other terminal」がUTF-8のロケールを作成するか。使用環境を考えると、Thai(tis620)対応のターミナルを使うべき。
+USER>zzdump ^poCN.ENGd.1(1)
+0000: 07 01 A1 A2 A3 A4 A5                                    ..�����
+USER>
