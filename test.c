@@ -90,6 +90,36 @@ int main(int argc, char** argv)
 
 	printf("name is %s. Length is %ld. ID is %ld.\n",name,name_len,id);
 
+	rc = SQLRowCount(hstmt1,&rowcount);
+	printf("SQLRowCount:%ld\n",rowcount);
+
+	SQLPOINTER attr;
+	SQLHDESC   hdesc = NULL;
+	rc = SQLGetStmtAttr( hstmt1,SQL_ATTR_CURSOR_SCROLLABLE, &attr,-6,NULL);
+	check("SQLGetStmtAttr",rc);
+	printf("SQLGetStmtAttr:%d\n",(int)attr); //cause warning
+
+	SQLSMALLINT ColumnCount;
+	rc = SQLNumResultCols( hstmt1, &ColumnCount);
+	check("SQLNumResultCols",rc);
+	printf("SQLNumResultCols:%d\n",(int)ColumnCount);
+
+	#define MAXCOLS 2
+	SQLCHAR         colname[32];
+	SQLSMALLINT     coltype;
+	SQLSMALLINT     colnamelen;
+	SQLSMALLINT     nullable;
+	SQLULEN      collen[MAXCOLS];
+	SQLSMALLINT     scale;
+
+ 	for (int i = 0; i < ColumnCount; i++) {
+		rc = SQLDescribeCol (hstmt1, i+1, colname, sizeof (colname), &colnamelen, &coltype, &collen[i], &scale, &nullable);
+		check("SQLDescribeCol",rc);
+		printf("SQLDescribeCol/ColumnName:%s ColumnSizePtr:%ld DecimalDigitsPtr: %d\n", colname,collen[i],scale);
+
+		//rc = SQLColAttribute(hstmt1, i+1,SQL_COLUMN_UNSIGNED);
+	}
+
 	rc = SQLCloseCursor( hstmt1 );
 	check("SQLCloseCursor",rc);
 
