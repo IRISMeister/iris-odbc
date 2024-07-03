@@ -1,6 +1,6 @@
 CC            = gcc
-#CFLAGS       = -O1 -I /usr/irissys/dev/iris-callin/include
-CFLAGS        = -g3 -ggdb -O3 -I /usr/irissys/dev/iris-callin/include
+#CFLAGS       = -O1 -finput-charset=utf-8 -fexec-charset=utf-8
+CFLAGS        = -g3 -ggdb -O3 -finput-charset=utf-8 -fexec-charset=utf-8
 LIBS          = -lodbc
 PROGRAM       = test 
 
